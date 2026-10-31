@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementing a Simple Business - Grade 12 Interactive Module</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<!--
+    <style>
+        
+    </style>
+-->
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans min-h-screen transition-colors duration-300 flex flex-col antialiased">
+
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand & Module Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                        <i class="fa-solid fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">Implementing a Simple Business</h1>
+                        <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">Grade 12 SHS Interactive Learning Module</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Progress Tracker Button -->
+                    <div class="hidden md:flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                        <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">Progress:</span>
+                        <div class="w-24 bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div id="moduleProgressBar" class="bg-indigo-600 h-full w-0 transition-all duration-500"></div>
+                        </div>
+                        <span id="moduleProgressPercent" class="text-xs font-bold text-indigo-600 dark:text-indigo-400">0%</span>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="themeToggleBtn" onclick="toggleDarkMode()" class="p-2.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="Toggle Theme">
+                        <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                    </button>
+
+                    <!-- Accessible Classroom Font Size Controls -->
+                    <div class="hidden sm:flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-slate-800 p-1" role="group" aria-label="Classroom text size controls">
+                        <button type="button" onclick="adjustClassroomFont(-1)" class="px-2 py-1 rounded-lg font-bold text-slate-700 dark:text-slate-100 hover:bg-white dark:hover:bg-slate-700" aria-label="Decrease text size" title="Decrease text size">A−</button>
+                        <button type="button" onclick="resetClassroomFont()" class="px-2 py-1 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-100 hover:bg-white dark:hover:bg-slate-700" aria-label="Reset text size" title="Reset text size">A</button>
+                        <button type="button" onclick="adjustClassroomFont(1)" class="px-2 py-1 rounded-lg text-lg font-bold text-slate-700 dark:text-slate-100 hover:bg-white dark:hover:bg-slate-700" aria-label="Increase text size" title="Increase text size">A+</button>
+                    </div>
+
+                    <span id="classroomFontStatus" class="sr-only" aria-live="polite">Text size 100 percent</span>
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 text-slate-600 dark:text-slate-300 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Navigation Bar (Desktop) -->
+        <nav class="hidden lg:flex overflow-x-auto border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/50 px-4">
+            <div class="max-w-7xl mx-auto flex gap-1 py-1.5 text-xs font-medium">
+                <a href="#overview" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">1. Pillars & Calc</a>
+                <a href="#objectives" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">2. Learning Objectives</a>
+                <a href="#warmup" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">3. Warm-Up Pitch</a>
+                <a href="#prior" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">4. Prior Learning Map</a>
+                <a href="#analysis" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">5. Analysis & Questions</a>
+                <a href="#groups" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">6. Group Work</a>
+                <a href="#assessment-access" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition font-bold text-indigo-600 dark:text-indigo-400">7. Assessment Access</a>
+                <a href="#assignment" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">8. Blueprint Assignment</a>
+                <a href="#wrapup" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">9. Founder Certificate</a>
+                <a href="#references" class="nav-link px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 transition">10. References</a>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 space-y-1">
+            <div class="flex items-center gap-2 px-3 py-2" role="group" aria-label="Mobile classroom text size controls"><span class="text-xs font-bold">Text size:</span><button type="button" onclick="adjustClassroomFont(-1)" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold" aria-label="Decrease text size">A−</button><button type="button" onclick="resetClassroomFont()" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold" aria-label="Reset text size">A</button><button type="button" onclick="adjustClassroomFont(1)" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 font-bold" aria-label="Increase text size">A+</button></div>
+            <a href="#overview" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">1. Pillars & Break-Even Calculator</a>
+            <a href="#objectives" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">2. Bloom's Taxonomy Objectives</a>
+            <a href="#warmup" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">3. Warm-Up: Quick Pitch</a>
+            <a href="#prior" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">4. Prior Learning: Board Mapper</a>
+            <a href="#analysis" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">5. Pedagogical Analysis & Questions</a>
+            <a href="#groups" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">6. Group Application Tasks</a>
+            <a href="#assessment-access" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-indigo-50 dark:hover:bg-slate-800">7. Assessment Access</a>
+            <a href="#assignment" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">8. Digital Business Assignment</a>
+            <a href="#wrapup" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">9. Wrap-up & Founder Certificate</a>
+            <a href="#references" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-800">10. References & Bibliography</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="mainContent" tabindex="-1" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- HERO SECTION -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-8 sm:p-12 shadow-2xl">
+            <div class="relative z-10 max-w-3xl space-y-4">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                    <i class="fa-solid fa-graduation-cap"></i> Senior High School Entrepreneurship
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                    Implementing a Simple Business
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                    Translate your business concepts into operational, revenue-generating realities. Master the 6 operational pillars, validate ideas with MVPs, practice financial literacy, and embody <i>Maka-tao</i> customer values.
+                </p>
+                <div class="pt-4 flex flex-wrap gap-4">
+                    <a href="#overview" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-rocket"></i> Begin Module
+                    </a>
+                    <a href="#assessment" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold backdrop-blur-sm border border-white/20 transition">
+                        <i class="fa-solid fa-list-check"></i> Take Assessment
+                    </a>
+                </div>
+            </div>
+            <!-- Background Decorative Grid -->
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-[200px] pointer-events-none">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+        </section>
+
+        <!-- STUDENT PROFILE, DEVICE PERSISTENCE, OPTIONAL TEACHER MONITORING -->
+        <section id="studentWorkspace" class="no-print bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-indigo-200 dark:border-slate-700 shadow-md space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Student Learning Record</h2>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Enter your information first. Your activities, answers, assignment and attempts are saved on this device.</p>
+                </div>
+                <span id="saveStatus" class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Device saving is ready</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div><label for="studentFullName" class="block text-xs font-bold mb-1">Full Name *</label><input id="studentFullName" type="text" autocomplete="name" placeholder="Surname, First Name, MI" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></div>
+                <div><label for="studentGradeSection" class="block text-xs font-bold mb-1">Grade & Section *</label><input id="studentGradeSection" type="text" placeholder="Grade 12 - STEM 1" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></div>
+                <div><label for="studentEmail" class="block text-xs font-bold mb-1">Email (optional)</label><input id="studentEmail" type="email" autocomplete="email" placeholder="student@example.com" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></div>
+                <div><label for="studentTeacher" class="block text-xs font-bold mb-1">Teacher (optional)</label><input id="studentTeacher" type="text" placeholder="Teacher's name" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></div>
+            </div>
+            <div class="rounded-2xl bg-indigo-50 dark:bg-slate-900 p-4 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <h3 class="font-bold text-sm text-indigo-900 dark:text-indigo-200">Actual Module Completion</h3>
+                    <span id="completionCount" class="text-xs font-bold text-indigo-700 dark:text-indigo-300">0 of 10 sections completed</span>
+                </div>
+                <div class="w-full h-3 rounded-full bg-indigo-100 dark:bg-slate-700 overflow-hidden"><div id="moduleProgressBarReal" class="h-full bg-indigo-600 rounded-full transition-all" style="width:0%"></div></div>
+                <div id="completionChecklist" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs"></div>
+                <p id="certificateEligibilityStatus" class="text-xs font-semibold text-slate-600 dark:text-slate-300">Certificate eligibility: complete all required activities, pass the quiz (12/15), finish the blueprint and closing reflection.</p>
+            </div>
+            <!-- CENTRALIZED TEACHER MONITORING DASHBOARD -->
+            <details id="teacherMonitoringPanel" class="rounded-2xl border border-indigo-200 dark:border-indigo-800 p-4">
+                <summary class="cursor-pointer font-bold text-sm text-indigo-800 dark:text-indigo-200">Centralized Teacher Monitoring Dashboard</summary>
+                <!-- TEACHER MONITORING ACCESS GATE: the dashboard remains hidden until the teacher enters the correct access code. -->
+                <div id="teacherMonitoringAccessGate" class="pt-4 space-y-3 text-sm">
+                    <div class="max-w-xl mx-auto rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-slate-900 p-5 space-y-3">
+                        <div class="flex items-center gap-2 text-indigo-800 dark:text-indigo-200 font-bold">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Teacher Access Required</span>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">Enter the authorized teacher access code to display the Centralized Teacher Monitoring Dashboard.</p>
+                        <label for="teacherMonitoringAccessCode" class="block text-xs font-bold">Teacher access code</label>
+                        <input id="teacherMonitoringAccessCode" type="password" autocomplete="off" placeholder="Enter teacher access code" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm" aria-describedby="teacherMonitoringAccessStatus">
+                        <button type="button" onclick="unlockTeacherMonitoringPanel()" class="w-full px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
+                            <i class="fa-solid fa-unlock-keyhole mr-1"></i> Unlock Teacher Monitoring
+                        </button>
+                        <p id="teacherMonitoringAccessStatus" role="status" aria-live="polite" class="text-xs text-slate-600 dark:text-slate-300">The monitoring dashboard is locked.</p>
+                    </div>
+                </div>
+                <div id="teacherMonitoringProtectedContent" class="pt-4 space-y-3 text-sm" hidden>
+                    <p class="text-slate-600 dark:text-slate-300">Load the latest synchronized profile for each student from the Google Sheet. The dashboard summarizes completion percentages, quiz results, Business Blueprint information, activity records, and the number of saved submissions.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div><label for="teacherAdminToken" class="block text-xs font-bold mb-1">Teacher dashboard access token</label><input id="teacherAdminToken" type="password" autocomplete="off" placeholder="Enter the token configured in Apps Script" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></div>
+                        <div class="flex items-end"><button type="button" onclick="loadCentralStudentDashboard()" class="w-full px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Load Central Student Records</button></div>
+                    </div>
+                    <p id="teacherDashboardStatus" role="status" aria-live="polite" class="text-xs text-slate-600 dark:text-slate-300">Dashboard not loaded. Configure the Apps Script administrator token first.</p>
+                    <div id="teacherDashboardSummary" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+                    <!-- TEACHER DATASET SEARCH: find an individual student or retrieve every latest profile in a grade/section. -->
+                    <div class="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-slate-900 p-4 space-y-4">
+                        <div>
+                            <h3 class="font-bold text-sm text-indigo-900 dark:text-indigo-200">Search Student or Section Dataset</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Load the centralized records first. Search by a student's name to inspect that student's complete available dataset, or search by grade and section to view the latest dataset for every student in that class.</p>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label for="teacherStudentNameSearch" class="block text-xs font-bold">Search a particular student's name</label>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <input id="teacherStudentNameSearch" type="search" placeholder="Enter student name" class="min-w-0 flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                                    <button type="button" onclick="searchTeacherStudentDataset()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm">Search Student</button>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="teacherSectionSearch" class="block text-xs font-bold">Search a particular grade and section</label>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <input id="teacherSectionSearch" type="search" placeholder="Enter grade and section" class="min-w-0 flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                                    <button type="button" onclick="searchTeacherSectionDataset()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm">View Class Dataset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="clearTeacherDatasetSearch()" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-xs font-bold">Clear Search Results</button>
+                            <p id="teacherDatasetSearchStatus" role="status" aria-live="polite" class="text-xs text-slate-600 dark:text-slate-300 self-center">No search has been performed.</p>
+                        </div>
+                        <div id="teacherDatasetSearchResults" class="space-y-3" aria-live="polite"></div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+                        <table class="w-full min-w-[900px] text-left text-xs">
+                            <thead class="bg-slate-100 dark:bg-slate-900"><tr><th class="p-3">Student Profile</th><th class="p-3">Completion</th><th class="p-3">Latest Quiz</th><th class="p-3">Business Blueprint</th><th class="p-3">Activity / Submissions</th><th class="p-3">Last Sync</th></tr></thead>
+                            <tbody id="teacherDashboardRows"><tr><td colspan="6" class="p-4 text-center text-slate-500">No centralized records loaded.</td></tr></tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-amber-700 dark:text-amber-300">Security: the token is validated by Apps Script and should be stored in Script Properties, not in this HTML file. Use a strong, private token and restrict spreadsheet access to authorized school personnel. Do not share the deployed monitoring URL or token.</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- SECTION 1: 6 OPERATIONAL PILLARS & BREAK-EVEN CALCULATOR -->
+        <section id="overview" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-layer-group"></i> Section 1
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">The 6 Core Operational Pillars</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Understanding the roadmap from concept validation to sustainable execution.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Pillar 1 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold mb-4">1</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Concept Validation & Market Definition</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Identify specific target demographics. Define your unique Value Proposition and launch a <b>Minimum Viable Product (MVP)</b> to gather real customer feedback with minimal risk.
+                    </p>
+                </div>
+                <!-- Pillar 2 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl font-bold mb-4">2</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Business Model & Financial Basics</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Structure fixed and variable costs. Determine pricing to ensure positive gross margins and maintain strict cash flow management to prevent timing gaps between payables and receivables.
+                    </p>
+                </div>
+                <!-- Pillar 3 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold mb-4">3</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Legal & Entity Requirements</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Select an appropriate legal structure (Sole Proprietorship, LLC, Partnership). Secure permits and separate personal funds from business bank accounts to protect personal assets.
+                    </p>
+                </div>
+                <!-- Pillar 4 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-bold mb-4">4</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Core Operational Setup</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Establish reliable supply chains, deploy merchant payment gateways (Stripe, Square, PayPal), and integrate accounting and CRM software for consistent operations.
+                    </p>
+                </div>
+                <!-- Pillar 5 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold mb-4">5</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Go-To-Market (GTM) Strategy</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Acquire initial clients via direct outreach, local SEO (Google Business Profile), organic content, customer reviews, and low-budget targeted advertising.
+                    </p>
+                </div>
+                <!-- Pillar 6 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl font-bold mb-4">6</div>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">Execution & Key Performance Indicators</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Monitor essential metrics: Gross Profit Margin, Customer Acquisition Cost (CAC), Customer Lifetime Value (LTV), and monthly Burn Rate / Runway.
+                    </p>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE WIDGET: LIVE BREAK-EVEN CALCULATOR -->
+            <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl mt-8">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1 space-y-4">
+                        <span class="px-3 py-1 bg-indigo-500/30 rounded-full text-xs font-semibold text-indigo-300 border border-indigo-400/30 uppercase tracking-wider">Interactive Tool</span>
+                        <h3 class="text-2xl font-bold">Live Break-Even Point Calculator</h3>
+                        <p class="text-slate-300 text-sm">
+                            Calculate the exact number of units you must sell to cover all fixed costs:
+                        </p>
+                        <div class="bg-indigo-950/80 p-3 rounded-xl border border-indigo-700/50 text-center text-xs font-mono">
+                            Break-Even Point (Units) = Fixed Costs ÷ (Price per Unit - Variable Cost per Unit)
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1 font-medium">Fixed Costs ($)</label>
+                                <input type="number" id="calcFixed" value="500" min="0" oninput="calculateBreakEven()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1 font-medium">Price per Unit ($)</label>
+                                <input type="number" id="calcPrice" value="4.00" step="0.5" min="0" oninput="calculateBreakEven()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1 font-medium">Variable Cost / Unit ($)</label>
+                                <input type="number" id="calcVariable" value="1.00" step="0.25" min="0" oninput="calculateBreakEven()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display Result Card -->
+                    <div class="w-full md:w-72 bg-slate-800/90 rounded-2xl p-6 border border-slate-700 text-center space-y-3">
+                        <span class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Required Sales</span>
+                        <div id="calcResult" class="text-4xl sm:text-5xl font-black text-indigo-400">167</div>
+                        <p class="text-xs text-slate-300">Units / Sales needed to break even</p>
+                        <div id="calcMarginInfo" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800">
+                            Contribution Margin: $3.00/unit
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: BLOOM'S TAXONOMY LEARNING OBJECTIVES -->
+        <section id="objectives" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-bullseye"></i> Section 2
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Aligned Learning Objectives</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Four integrated objectives across Cognitive, Psychomotor, Affective, and Values domains.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cognitive Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-indigo-600 dark:border-indigo-500 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">Cognitive Domain</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">Category: Creating</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-base">Knowledge Objective</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                        "By the end of this module, the student will be able to <b>DESIGN</b> a comprehensive implementation plan for a simple business, including legal setup, financial metrics, and go-to-market strategies."
+                    </p>
+                </div>
+
+                <!-- Psychomotor Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-emerald-500 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">Psychomotor Domain</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">Category: Origination</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-base">Skills Objective</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                        "By the end of this practical workshop, the student will be able to <b>BUILD</b> a functional minimum viable product (MVP) landing page complete with an integrated payment processing system."
+                    </p>
+                </div>
+
+                <!-- Affective Attitude Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-amber-500 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300">Affective Domain</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">Internalizing Values</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-base">Attitude Objective (Financial Literacy)</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                        "By the end of the lesson, the student will be able to <b>DISPLAY financial literacy</b> by consistently tracking all initial business expenses and budgeting responsibly when launching a venture."
+                    </p>
+                </div>
+
+                <!-- Affective Values Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-rose-500 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300">Core Values Integration</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">DepEd Core: Maka-tao</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-base">Values Objective (Concern for Others)</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                        "By the end of the lesson, the student will be able to <b>DISPLAY concern for others (Maka-tao)</b> by designing business operations and customer support practices that actively prioritize customer well-being."
+                    </p>
+                </div>
+            </div>
+            <div class="mt-5 rounded-xl bg-indigo-50 dark:bg-slate-800 p-4 text-sm no-print"><label class="flex items-start gap-3 cursor-pointer"><input id="objectivesAcknowledged" type="checkbox" class="mt-1" onchange="setSectionActivity('s2', this.checked)"><span>I have read and understood the learning objectives in this section.</span></label></div>
+        </section>
+
+        <!-- SECTION 3: WARM-UP ACTIVITY (THE QUICK PITCH) -->
+        <section id="warmup" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-fire-flame-curved"></i> Section 3
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Warm-Up Activity: "The Quick Pitch"</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Unleash your entrepreneurial spirit in 5 minutes.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md space-y-6">
+                <!-- 3 Steps -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-slate-700/50 border border-indigo-100 dark:border-slate-600 space-y-2">
+                        <div class="flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                            <span>Step 1: Pitch</span>
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white">60-Second Pitch</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">Pair up and pitch a simple, fun business idea (e.g., custom pet bowties, desk coffee delivery) on the spot.</p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-slate-700/50 border border-indigo-100 dark:border-slate-600 space-y-2">
+                        <div class="flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                            <span>Step 2: Core 3</span>
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white">Core 3 Check</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">Identify: 1) What problem it solves, 2) The selling price, and 3) The first item you must buy to start.</p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-slate-700/50 border border-indigo-100 dark:border-slate-600 space-y-2">
+                        <div class="flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                            <span>Step 3: Share</span>
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white">Group Share</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">Shout out your favorite ideas! Experience how quickly you can think like an active business founder.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Pitch Generator & Timer Widget -->
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button onclick="generateRandomIdea()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-lightbulb"></i> Generate Idea Prompt
+                        </button>
+                        <div id="ideaDisplay" class="text-xs font-medium text-slate-600 dark:text-slate-300 italic truncate max-w-xs">
+                            Click button for a quick business idea!
+                        </div>
+                    </div>
+
+                    <!-- Timer Widget -->
+                    <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <i class="fa-solid fa-clock text-indigo-600 dark:text-indigo-400"></i>
+                        <span id="pitchTimerDisplay" class="font-mono text-lg font-bold text-slate-900 dark:text-white">01:00</span>
+                        <button id="timerBtn" onclick="togglePitchTimer()" class="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition">Start</button>
+                        <button onclick="resetPitchTimer()" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-rotate-left text-xs"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PRIOR LEARNING ACTIVITY ("MY FIRST DOLLAR") -->
+        <section id="prior" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Section 4
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Prior Learning: "My First Dollar" Board Mapper</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Connect your everyday selling experiences directly to professional business terms.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md space-y-6">
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                    Think of a time you sold something (e.g., old clothes, food, crafts) or helped out in a business. Enter your experience below to map it to business operational pillars:
+                </p>
+
+                <!-- Interactive Mapping Inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">1. What You Provided (Item/Service)</label>
+                        <input type="text" id="mapProvided" placeholder="e.g., Homemade Lemonade" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">2. What It Cost You (Time/Materials)</label>
+                        <input type="text" id="mapCost" placeholder="e.g., Lemons, Sugar, Ice ($5)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">3. What You Earned (Price Charged)</label>
+                        <input type="text" id="mapEarned" placeholder="e.g., $15 total ($10 profit)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="addMapEntry()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition shadow-md shadow-indigo-500/20">
+                        <i class="fa-solid fa-plus mr-1"></i> Map Experience to Business Terms
+                    </button>
+                </div>
+
+                <!-- Mapped Results Table -->
+                <div class="overflow-x-auto pt-2">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-50 dark:bg-slate-900/80 text-indigo-900 dark:text-indigo-200 border-b border-indigo-100 dark:border-slate-700">
+                                <th class="p-3 font-bold rounded-tl-xl">Everyday Experience</th>
+                                <th class="p-3 font-bold">Formal Business Pillar</th>
+                                <th class="p-3 font-bold rounded-tr-xl">Operational Concept</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mapTableBody" class="divide-y divide-slate-200 dark:divide-slate-700 text-slate-700 dark:text-slate-300">
+                            <!-- Pre-populated Sample Rows -->
+                            <tr>
+                                <td class="p-3"><b class="text-slate-900 dark:text-white">Provided:</b> Homemade Cupcakes</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-semibold">Value Proposition</span></td>
+                                <td class="p-3">Product / Service Offering</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3"><b class="text-slate-900 dark:text-white">Cost:</b> Flour, Eggs, Baking Time</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-semibold">Cost Structure</span></td>
+                                <td class="p-3">Fixed & Variable Cost Inputs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3"><b class="text-slate-900 dark:text-white">Earned:</b> Charged $2 per cupcake</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-semibold">Revenue & Profit</span></td>
+                                <td class="p-3">Gross Margin & Cash Flow</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: PEDAGOGICAL ANALYSIS & ESSENTIAL QUESTIONS -->
+        <section id="analysis" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-graduation-cap"></i> Section 5
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Pedagogical Analysis & Guiding Questions</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Deconstruct instructional strategies and clarify key understandings.</p>
+            </div>
+
+            <!-- Accordion Items -->
+            <div class="space-y-4">
+                <!-- Analysis Accordion -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc1')" class="w-full px-6 py-4 text-left font-bold text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-brain text-indigo-600 dark:text-indigo-400"></i> Pedagogical Analysis: Why "My First Dollar" Works
+                        </span>
+                        <i id="acc1-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc1" class="hidden px-6 py-4 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 space-y-3 bg-slate-50/50 dark:bg-slate-900/50">
+                        <p><b>1. Constructivist Alignment:</b> Activates existing schema by connecting new business jargon to familiar past realities (selling secondhand items, helping in family stores).</p>
+                        <p><b>2. Dyadic Interactions:</b> Low-stakes peer sharing provides psychological safety, letting students verbalize latent knowledge before whole-class participation.</p>
+                        <p><b>3. Visual Scaffolding:</b> Categorizing student input directly translates informal terms into formal pillars: Value Proposition, Cost Structures, and Revenue Margins.</p>
+                    </div>
+                </div>
+
+                <!-- Guiding & Transition Questions Accordion -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc2')" class="w-full px-6 py-4 text-left font-bold text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-question text-indigo-600 dark:text-indigo-400"></i> Essential Reflective & Transition Questions
+                        </span>
+                        <i id="acc2-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc2" class="hidden px-6 py-4 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 space-y-4 bg-slate-50/50 dark:bg-slate-900/50">
+                        <div class="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h5 class="font-bold text-indigo-600 dark:text-indigo-400 text-xs uppercase mb-1">Reflective Question 1</h5>
+                            <p class="italic">"How did your past experience of buying or selling reveal hidden costs—like time, effort, or transport—that people often forget when setting a price?"</p>
+                        </div>
+                        <div class="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h5 class="font-bold text-indigo-600 dark:text-indigo-400 text-xs uppercase mb-1">Reflective Question 2</h5>
+                            <p class="italic">"Looking back at your story, what made your customer willing to give you their hard-earned money instead of keeping it or going elsewhere?"</p>
+                        </div>
+                        <div class="p-3 bg-indigo-900 text-white rounded-xl shadow-inner">
+                            <h5 class="font-bold text-indigo-300 text-xs uppercase mb-1"><i class="fa-solid fa-arrow-right-long mr-1"></i> Topic Transition Question</h5>
+                            <p class="italic">"If taking one simple transaction requires balancing value, costs, and customer trust, what formal steps and systems do we need to put in place to repeat that process successfully thousands of times over?"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: GROUP APPLICATION ACTIVITIES (GROUPS 1 - 4) -->
+        <section id="groups" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-users-gear"></i> Section 6
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Group Real-Life Application Work</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Four focused teams executing Knowledge, Skills, Attitude, and Values objectives.</p>
+            </div>
+
+            <!-- Group Navigation Tabs -->
+            <div class="flex overflow-x-auto gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+                <button onclick="switchGroupTab('group1')" id="tab-group1" class="group-tab px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap bg-indigo-600 text-white shadow-md transition">
+                    Group 1: Knowledge (Strategy Plan)
+                </button>
+                <button onclick="switchGroupTab('group2')" id="tab-group2" class="group-tab px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    Group 2: Skills (MVP Page)
+                </button>
+                <button onclick="switchGroupTab('group3')" id="tab-group3" class="group-tab px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    Group 3: Attitude (Financial Ledger)
+                </button>
+                <button onclick="switchGroupTab('group4')" id="tab-group4" class="group-tab px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    Group 4: Values (Maka-tao Care)
+                </button>
+            </div>
+
+            <!-- Group Content Panels -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md min-h-[350px]">
+
+                <!-- Group 1 Panel -->
+                <div id="content-group1" class="group-content space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Group 1: Implementation Strategy Roadmap</h3>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">Knowledge Objective</span>
+                    </div>
+                    <ul class="text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+                        <li><b>Outline Core Pillars:</b> Create a 1-page roadmap for legal setup, financial metrics, and GTM.</li>
+                        <li><b>Define Registration Steps:</b> Pick legal structure (e.g., LLC) and outline required permits.</li>
+                        <li><b>Set Benchmarks:</b> Compute break-even sales and target gross margin.</li>
+                    </ul>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+                        <span class="font-bold text-indigo-600 dark:text-indigo-400 uppercase">Sample Pattern (Bean & Go Mobile Coffee)</span>
+                        <p class="text-slate-700 dark:text-slate-300">
+                            <b>Legal:</b> LLC registration + municipal health permit. <br>
+                            <b>Financials:</b> Fixed = $500/mo, Price = $4.00, Variable = $1.00 $\rightarrow$ Break-Even = 167 cups. <br>
+                            <b>GTM:</b> "First 50 Cups Free" promo via local Instagram geo-tags during morning rush hour.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Group 2 Panel -->
+                <div id="content-group2" class="group-content hidden space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Group 2: Functional MVP Landing Page</h3>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">Skills Objective</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">
+                        Construct a functional single-page website mockup with an integrated call-to-action button and sandbox payment checkout button.
+                    </p>
+
+                    <!-- Interactive MVP Mockup Preview Card -->
+                    <div class="p-6 bg-slate-900 text-white rounded-2xl border border-slate-700 space-y-4 max-w-lg mx-auto shadow-xl">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-indigo-400"><i class="fa-solid fa-globe"></i> BeanGo-Coffee.com</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-900 text-emerald-300">MVP Sandbox</span>
+                        </div>
+                        <div class="text-center space-y-2">
+                            <h4 class="text-xl font-extrabold text-white">Artisanal Cold Brew Delivered To Your Desk</h4>
+                            <p class="text-xs text-slate-300">Freshly brewed coffee dropped off before your 9 AM morning meeting.</p>
+                            <div class="pt-2">
+                                <button onclick="alert('MVP Demo: Integrated Stripe/PayPal Checkout simulated successfully!')" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs shadow-lg transition transform hover:scale-105">
+                                    <i class="fa-solid fa-credit-card mr-1"></i> Pre-Pay $20 for 5-Day Weekly Pass
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 3 Panel -->
+                <div id="content-group3" class="group-content hidden space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Group 3: Financial Expense Ledger Simulator</h3>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300">Attitude Objective</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">
+                        Demonstrate financial literacy and budgeting discipline by recording expenses and tracking variances:
+                    </p>
+
+                    <!-- Interactive Ledger Tool -->
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                            <input type="text" id="ledgerDesc" placeholder="Item Description" class="bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs">
+                            <input type="number" id="ledgerBudget" placeholder="Budgeted ($)" class="bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs">
+                            <input type="number" id="ledgerActual" placeholder="Actual Spent ($)" class="bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs">
+                            <button onclick="addLedgerRow()" class="bg-amber-600 hover:bg-amber-700 text-white rounded-lg p-2 text-xs font-bold transition">Add Entry</button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300">
+                                        <th class="p-2">Description</th>
+                                        <th class="p-2">Budgeted</th>
+                                        <th class="p-2">Actual</th>
+                                        <th class="p-2">Variance</th>
+                                        <th class="p-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ledgerTableBody" class="divide-y divide-slate-200 dark:divide-slate-700">
+                                    <tr>
+                                        <td class="p-2 font-medium">Business Permit Permit Registration</td>
+                                        <td class="p-2">$150.00</td>
+                                        <td class="p-2">$120.00</td>
+                                        <td class="p-2 text-emerald-600 font-bold">+$30.00</td>
+                                        <td class="p-2 text-slate-500">Reallocated to ads</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Coffee Beans Batch #1</td>
+                                        <td class="p-2">$100.00</td>
+                                        <td class="p-2">$115.00</td>
+                                        <td class="p-2 text-rose-600 font-bold">-$15.00</td>
+                                        <td class="p-2 text-slate-500">Negotiated bulk rate</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 4 Panel -->
+                <div id="content-group4" class="group-content hidden space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Group 4: Customer-Centric Care SOP (Maka-tao)</h3>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300">Values Integration</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">
+                        Design empathetic policies prioritizing human dignity and customer well-being above short-term profit.
+                    </p>
+
+                    <div class="p-5 bg-rose-50 dark:bg-slate-900 rounded-2xl border border-rose-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-rose-800 dark:text-rose-300 text-sm"><i class="fa-solid fa-heart mr-1"></i> "Make It Right" Service Policy Example</h4>
+                        <div class="text-xs text-slate-700 dark:text-slate-300 space-y-2">
+                            <p><b>1. Instant Replacement:</b> If coffee arrives cold or incorrect, replace it immediately for free or grant a full refund without hassle.</p>
+                            <p><b>2. Inclusive Options:</b> Stock oat and almond milk at $0 extra charge so dietary needs are respected equally.</p>
+                            <p><b>3. Empathy Resolution Script:</b> <i>"We are so sorry for spoiling your morning routine! Here is your correct drink, plus a free drink voucher for tomorrow."</i></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-5 rounded-xl bg-indigo-50 dark:bg-slate-900 p-4 text-sm no-print"><label class="flex items-start gap-3 cursor-pointer"><input id="groupTaskCompleted" type="checkbox" class="mt-1" onchange="setSectionActivity('s6', this.checked)"><span>I completed and reviewed my assigned Group Application Task (including the applicable planning, budget, operational or customer-care output).</span></label></div>
+        </section>
+
+        <!-- SECTION 7: ASSESSMENT ACCESS GATE. The assessment remains hidden until the correct code is entered. -->
+        <section id="assessment-access" class="scroll-mt-24 rounded-3xl border border-amber-200 dark:border-amber-800 bg-white dark:bg-slate-800 p-6 sm:p-8 space-y-4">
+            <div><p class="text-sm font-bold text-amber-700 dark:text-amber-300">SECTION 7 • RESTRICTED ACCESS</p><h2 class="text-2xl font-extrabold">Assessment Access</h2><p class="text-sm text-slate-600 dark:text-slate-300">Enter the assessment access code provided by your teacher to display the 15-item assessment.</p></div>
+            <div class="flex flex-col sm:flex-row gap-3"><label class="sr-only" for="assessmentAccessCode">Assessment access code</label><input id="assessmentAccessCode" type="password" autocomplete="off" placeholder="Enter assessment access code" class="flex-1 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-4 py-3"><button type="button" onclick="unlockAssessment()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Unlock Assessment</button></div>
+            <p id="assessmentAccessStatus" role="status" aria-live="polite" class="text-xs text-slate-600 dark:text-slate-300">The assessment is currently locked.</p>
+        </section>
+
+        <!-- SECTION 7: 15-ITEM QUIZ -->
+        <section id="assessment" class="hidden scroll-mt-24 space-y-6" aria-hidden="true">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-pen-to-square"></i> Section 7
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">15-Item Comprehensive Quiz</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Test your mastery across Knowledge, Skills, Attitude, and Values objectives.</p>
+            </div>
+
+            <!-- Quiz Card Container -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl space-y-8">
+
+                <p class="text-xs text-slate-600 dark:text-slate-300">Your question order and answer choices are randomized for each attempt. Enter your full name and grade/section in Student Learning Record before submitting.</p>
+                <div id="quizAttemptSummary" class="text-xs font-bold text-indigo-700 dark:text-indigo-300">Attempt history: No attempts yet.</div>
+                <div id="quizAttemptHistory" class="text-xs text-slate-600 dark:text-slate-300 space-y-1" aria-live="polite"></div>
+                <!-- Dynamic Quiz Form Container -->
+                <form id="quizForm" class="space-y-8">
+                    <!-- Questions will be injected via JS -->
+                </form>
+
+                <!-- Quiz Submit Controls -->
+                <div id="quizControls" class="pt-6 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <button type="button" onclick="gradeQuiz()" class="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-check-double mr-2"></i> Submit Answers & Grade Quiz
+                    </button>
+                    <button type="button" onclick="resetQuiz()" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-semibold underline">
+                        Reset All Answers
+                    </button>
+                </div>
+
+                <!-- Quiz Score Result Summary Card -->
+                <div id="quizResultCard" class="hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-indigo-900 to-slate-900 text-white text-center space-y-4 shadow-2xl">
+                    <div id="scoreBadge" class="w-20 h-20 mx-auto rounded-full bg-indigo-500/30 border-2 border-indigo-400 flex items-center justify-center text-3xl font-black">
+                        15/15
+                    </div>
+                    <h3 id="scoreTitle" class="text-2xl font-bold">Outstanding Performance!</h3>
+                    <p id="scoreMessage" class="text-slate-300 text-sm max-w-lg mx-auto">
+                        You've demonstrated thorough understanding across all operational business pillars, financial literacy metrics, and customer care principles!
+                    </p>
+                    <div class="pt-2">
+                        <a href="#assignment" class="inline-block px-6 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs transition">
+                            Proceed to Blueprint Assignment <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TEACHER ANSWER SHEET: separately protected with the requested answer-sheet code. -->
+        <section id="answerSheetAccess" class="no-print scroll-mt-24 rounded-3xl border border-rose-200 dark:border-rose-900 bg-white dark:bg-slate-800 p-6 sm:p-8 space-y-4">
+            <div><p class="text-sm font-bold text-rose-700 dark:text-rose-300">TEACHER RESOURCE • RESTRICTED</p><h2 class="text-xl font-extrabold">Assessment Answer Sheet</h2><p class="text-sm text-slate-600 dark:text-slate-300">Enter the separate answer-sheet access code to display the correct answers and explanations.</p></div>
+            <div class="flex flex-col sm:flex-row gap-3"><label class="sr-only" for="answerSheetAccessCode">Answer sheet access code</label><input id="answerSheetAccessCode" type="password" autocomplete="off" placeholder="Enter answer-sheet access code" class="flex-1 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-4 py-3"><button type="button" onclick="unlockAnswerSheet()" class="px-6 py-3 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold">Show Answer Sheet</button></div>
+            <p id="answerSheetAccessStatus" role="status" aria-live="polite" class="text-xs text-slate-600 dark:text-slate-300">The answer sheet is currently locked.</p>
+            <div id="answerSheetContent" class="hidden space-y-3" aria-hidden="true"><div class="flex flex-wrap justify-between items-center gap-2"><h3 class="font-extrabold text-lg">15-Item Answer Key and Explanations</h3><button type="button" onclick="printAnswerSheet()" class="px-4 py-2 rounded-lg bg-slate-700 text-white font-bold">Print Answer Sheet</button></div><div id="answerSheetRows" class="space-y-3"></div></div>
+            <p class="text-xs text-amber-700 dark:text-amber-300">Important: codes embedded in a client-side HTML file are not secure secrets. A technically knowledgeable user can inspect the page source. For a high-stakes examination, validate access on a trusted server and distribute the answer key separately to authorized teachers.</p>
+        </section>
+
+        <!-- SECTION 8: DIGITAL ASSIGNMENT ("MY FIRST BUSINESS BLUEPRINT") -->
+        <section id="assignment" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-file-pen"></i> Section 8
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Post-Lesson Assignment: "My First Business Blueprint"</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Reinforce and strengthen today's lesson with your personal 1-page launch plan.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Form Column -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Student Name</label>
+                            <input type="text" id="asgnName" placeholder="Enter your full name" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Business Name & Product/Service</label>
+                            <input type="text" id="asgnBusiness" placeholder="e.g., QuickRepair - On-demand bike tuning" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">1-Sentence Value Proposition</label>
+                            <textarea id="asgnValue" rows="2" placeholder="What problem does it solve for your customers?" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Selling Price ($)</label>
+                                <input type="text" id="asgnPrice" placeholder="e.g., $15.00" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Estimated Unit Cost ($)</label>
+                                <input type="text" id="asgnCost" placeholder="e.g., $5.00" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">First Customer Acquisition Action</label>
+                            <input type="text" id="asgnAction" placeholder="e.g., Post on local community groups tomorrow morning" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Maka-tao Customer Commitment</label>
+                            <textarea id="asgnMakatao" rows="2" placeholder="How will you handle customer care with empathy and fairness?" oninput="updateBlueprintPreview()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Live Blueprint Preview Box -->
+                    <div id="blueprintPreview" class="bg-slate-50 dark:bg-slate-900 border-2 border-dashed border-indigo-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
+                                <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Business Launch Sheet</span>
+                                <span id="prevName" class="text-xs text-slate-500 font-semibold">[Student Name]</span>
+                            </div>
+                            <h4 id="prevBusiness" class="font-extrabold text-slate-900 dark:text-white text-lg">[Business Venture Name]</h4>
+                            <p id="prevValue" class="text-xs text-slate-600 dark:text-slate-300 italic">"Value proposition will appear here..."</p>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-xs pt-2">
+                                <div class="bg-white dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                                    <span class="text-slate-400 text-[10px] block">PRICE / COST</span>
+                                    <span id="prevPriceCost" class="font-bold text-slate-800 dark:text-slate-200">$0.00 / $0.00</span>
+                                </div>
+                                <div class="bg-white dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                                    <span class="text-slate-400 text-[10px] block">FIRST STEP</span>
+                                    <span id="prevAction" class="font-bold text-slate-800 dark:text-slate-200 truncate block">Action step...</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-rose-50 dark:bg-slate-800/80 rounded-xl border border-rose-100 dark:border-slate-700">
+                                <span class="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase block">Maka-tao Care Policy</span>
+                                <p id="prevMakatao" class="text-xs text-slate-700 dark:text-slate-300 italic">"Customer care promise..."</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex gap-2">
+                            <button onclick="printBusinessBlueprint()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition">
+                                <i class="fa-solid fa-print mr-1"></i> Print / Save PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print"><button type="button" onclick="printBusinessBlueprint()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold"><i class="fa-solid fa-print mr-2"></i>Print / Save Business Blueprint</button><button type="button" onclick="saveProgressNow()" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold">Save Blueprint on This Device</button></div>
+                <p id="blueprintCompletionHint" class="text-xs text-slate-500 dark:text-slate-400 no-print">Complete every blueprint field to satisfy the assignment requirement.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 9: WRAP-UP FOUNDER CERTIFICATE -->
+        <section id="wrapup" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-award"></i> Section 9
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Wrap-up: Founders' Circle</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Commit your key takeaway and generate your personal Founder Badge!</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md space-y-6 text-center max-w-2xl mx-auto">
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">The Founders' Reflection Circle</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-300">Complete your single anchor word and launch sentence below:</p>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="founderWord" placeholder="Your One-Word Anchor (e.g., Discipline, Empathy, MVP)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2 text-sm text-center font-bold">
+                    <input type="text" id="founderStatement" placeholder="Starting my business begins with..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2 text-sm text-center">
+                    <button type="button" onclick="generateCertificate()" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-certificate mr-2"></i> Claim Founder Badge
+                    </button>
+                    <button id="printCertificateButton" type="button" onclick="printFounderCertificate()" disabled class="px-8 py-3 bg-slate-400 text-white font-bold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed">Print / Save Certificate</button>
+                </div>
+
+                <!-- Generated Badge Display -->
+                <div id="certificateDisplay" class="hidden pt-6">
+                    <div class="p-8 rounded-3xl bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 border-4 border-amber-400/80 text-white shadow-2xl relative overflow-hidden space-y-4">
+                        <div class="text-amber-400 text-4xl mb-2"><i class="fa-solid fa-ribbon"></i></div>
+                        <span class="text-[10px] tracking-widest uppercase font-bold text-indigo-300">Grade 12 SHS Entrepreneurship</span>
+                        <h4 class="text-2xl font-black text-amber-300 tracking-wide">CERTIFIED FUTURE FOUNDER</h4>
+                        <p class="text-xs text-slate-300">This certifies that</p>
+                        <div id="certName" class="text-xl font-bold text-white border-b border-indigo-500/50 pb-1 max-w-xs mx-auto">[Student Name]</div>
+                        <p class="text-xs text-slate-300 max-w-sm mx-auto">
+                            Has successfully completed the <b>Implementing a Simple Business</b> module and committed to the anchor virtue:
+                        </p>
+                        <div id="certWord" class="inline-block px-4 py-1.5 rounded-full bg-amber-400/20 text-amber-300 font-extrabold text-sm border border-amber-400/40">
+                            "EXECUTION"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10: REFERENCES & BIBLIOGRAPHY -->
+        <section id="references" class="scroll-mt-24 space-y-6">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-semibold">
+                    <i class="fa-solid fa-book-bookmark"></i> Section 10
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">References & Bibliography</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm">Curated literature across entrepreneurship, finance, and educational taxonomies.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                <!-- Category 1 -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                    <h3 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-rocket"></i> Business & Startups
+                    </h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-slate-300">
+                        <li><b>Blank, S. (2012).</b> <i>The Startup Owner's Manual.</i> K&S Ranch Publishing.</li>
+                        <li><b>Osterwalder, A. (2010).</b> <i>Business Model Generation.</i> Wiley.</li>
+                        <li><b>Ries, E. (2011).</b> <i>The Lean Startup.</i> Crown Business.</li>
+                    </ul>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                    <h3 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-coins"></i> Finance & Operations
+                    </h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-slate-300">
+                        <li><b>Berman, K. et al. (2013).</b> <i>Financial Intelligence for Entrepreneurs.</i> HBR Press.</li>
+                        <li><b>Scarborough, N. (2018).</b> <i>Essentials of Small Business Management.</i> Pearson.</li>
+                    </ul>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                    <h3 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-school"></i> Educational Frameworks
+                    </h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-slate-300">
+                        <li><b>Bloom, B. S. (1956).</b> <i>Taxonomy of Educational Objectives.</i></li>
+                        <li><b>Krathwohl, D. R. (1964).</b> <i>Affective Domain Taxonomy.</i></li>
+                        <li><b>DepEd Philippines (2019).</b> <i>K to 12 Maka-tao Core Values Framework.</i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rounded-xl bg-indigo-50 dark:bg-slate-800 p-4 text-sm no-print"><label class="flex items-start gap-3 cursor-pointer"><input id="referencesAcknowledged" type="checkbox" class="mt-1" onchange="setSectionActivity('s10', this.checked)"><span>I reviewed the references and bibliography provided in this module.</span></label></div>
+        </section>
+
+    </main>
+
+    <!-- Dedicated A4 print target: populated only when the learner prints the completed blueprint. -->
+    <section id="blueprintPrintSheet" aria-hidden="true"></section>
+    <!-- Dedicated A4 print target: populated only when the learner prints the eligible certificate. -->
+    <section id="certificatePrintSheet" aria-hidden="true"></section>
+
+    <!-- DEVELOPER GOOGLE SHEETS SETUP: intentionally placed near the footer to keep student-facing content uncluttered. -->
+    <section id="developerGoogleSheetsSetup" class="max-w-7xl mx-auto px-4 py-4 space-y-3">
+            <!-- DEVELOPER-ONLY GATE: Google Sheets synchronization guidance remains hidden until the developer enters the access code. -->
+            <div id="googleSheetsGuidanceAccessGate" class="rounded-2xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-slate-900 p-4 space-y-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-amber-700 dark:text-amber-300" aria-hidden="true"></i>
+                    <h3 class="font-extrabold text-sm text-amber-900 dark:text-amber-200">Developer Access Required</h3>
+                </div>
+                <p class="text-xs text-slate-700 dark:text-slate-300">The Google Sheets synchronization guidance is hidden. Developers must enter the authorized access code to view the setup instructions and synchronization configuration guide.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+                    <label class="sr-only" for="googleSheetsGuidanceAccessCode">Developer access code</label>
+                    <input id="googleSheetsGuidanceAccessCode" type="password" autocomplete="off" placeholder="Enter developer access code" aria-describedby="googleSheetsGuidanceAccessStatus" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm">
+                    <button type="button" id="unlockGoogleSheetsGuidanceButton" onclick="unlockGoogleSheetsGuidance()" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold">Unlock Guidance</button>
+                </div>
+                <p id="googleSheetsGuidanceAccessStatus" role="status" aria-live="polite" class="text-xs font-semibold text-slate-600 dark:text-slate-300">Guidance is locked.</p>
+            </div>
+            <details id="googleSheetsGuidanceDetails" hidden class="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <summary class="cursor-pointer font-bold text-sm">Optional Google Sheets teacher monitoring setup</summary>
+                <div class="pt-3 space-y-3 text-xs text-slate-600 dark:text-slate-300">
+                    <p>Google Sheets synchronization sends the student's complete saved learning dataset to a centralized teacher spreadsheet. The dataset includes student details, all tracked section activities, activity events, learning form values, mapper and ledger entries, Business Blueprint fields, Founder Reflection, quiz attempts, latest quiz result, certificate status, and device save timestamp. Synchronization is available manually or automatically after changes.</p>
+                    <label for="sheetsWebAppUrl" class="block font-bold">Google Apps Script Web App URL (permanently configured)</label>
+                    <input id="sheetsWebAppUrl" type="url" value="https://script.google.com/macros/s/AKfycbxLAIF9q3TmVIf0WuIod1L2SrIuUQ83EJ-3T7J_FwCm-YdD5LQsHf7Piv5CL0qibMetEQ/exec" readonly aria-readonly="true" class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm cursor-not-allowed">
+                    <p class="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">This module is already connected to the deployed Apps Script endpoint. You do not need to paste the URL on each device. Student progress remains saved locally on each device until it is synchronized to the central spreadsheet.</p>
+                    <!-- GOOGLE SPREADSHEET LINK BUTTON: opens the teacher monitoring spreadsheet directly; this is separate from the Apps Script Web App URL above. -->
+                    <a id="openGoogleSpreadsheetButton" href="https://docs.google.com/spreadsheets/d/1RL3GJZtVVKUA_HzwfK30miHBVCYqoFNTvxiH1ZXjoNI/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold"><i class="fa-brands fa-google-drive" aria-hidden="true"></i> Open Google Sheet</a>
+                    <label class="flex items-start gap-2 font-semibold"><input id="sheetsAutoSync" type="checkbox" class="mt-0.5"><span>Enable automatic Google Sheets synchronization after saved changes (uses a short delay to combine rapid edits).</span></label>
+                    <div class="flex flex-wrap gap-2"><button type="button" onclick="syncToGoogleSheets()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold">Synchronize Complete Dataset Now</button><button type="button" onclick="downloadMyProgressJSON()" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-white font-bold">Download Complete Dataset Backup</button></div>
+                    <!-- LOCAL MODULE STORAGE CLEAR: removes only this learning module's saved progress from this browser's localStorage/sessionStorage. It does not clear unrelated website data. -->
+                    <div class="rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-3 space-y-2">
+                        <h4 class="font-extrabold text-amber-900 dark:text-amber-200">Troubleshooting: Clear Local Module Storage</h4>
+                        <p class="text-xs text-amber-900 dark:text-amber-100">Use this only when troubleshooting corrupted or stuck local data. This removes the learning module's saved progress from this browser on this device. Any progress that has not been synchronized to Google Sheets or downloaded as a backup may be permanently lost. This does not clear other websites' storage or affect data stored in the central Google Sheet.</p>
+                        <button type="button" id="clearLocalModuleStorageButton" onclick="clearLocalModuleStorage()" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-800 text-white font-bold"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> Clear Local Module Storage</button>
+                        <p id="clearLocalModuleStorageStatus" role="status" aria-live="polite" class="text-xs font-semibold text-amber-900 dark:text-amber-200">No storage changes have been made.</p>
+                    </div>
+                    <div class="rounded-xl bg-slate-50 dark:bg-slate-900 p-3 space-y-2">
+                        <h4 class="font-extrabold text-slate-800 dark:text-slate-100">Teacher setup guide: Google Sheets + Apps Script</h4>
+                        <ol class="list-decimal pl-5 space-y-2">
+                            <li>Sign in to the school-approved Google account and create a new Google Spreadsheet. Give it a clear title, such as <b>Grade 12 Entrepreneurship – Business Implementation Monitoring</b>.</li>
+                            <li>Rename the first worksheet tab exactly <b>StudentProgress</b>. The script can also create this tab automatically if it is missing.</li>
+                            <li>The learning module is preconfigured to use the deployed Google Apps Script Web App endpoint shown above. The complete server-side Apps Script code is retained in the “Complete Google Apps Script Code (Code.gs)” panel below for authorized maintenance. You do not need to paste the endpoint into this HTML file or configure it separately on each device.</li>
+                            <li>The existing endpoint is already deployed. Do not create another deployment unless you are intentionally replacing or updating the server-side Apps Script project.</li>
+                            <li>In the existing Apps Script deployment, confirm that “Execute as” and “Who has access” follow your school and Google Workspace administrator's requirements. A publicly accessible deployment may expose the endpoint; do not use it for sensitive student records without authorization.</li>
+                            <li>Keep the existing deployment active and authorized. The permanent /exec URL is embedded in this HTML module and is used automatically by the synchronization and teacher-dashboard functions.</li>
+                            <li>On any device, enter the student's Full Name and Grade &amp; Section, then click <b>Synchronize Complete Dataset Now</b>. The module automatically sends the complete dataset to the configured central Google Sheet; no endpoint pasting is required.</li>
+                            <li>Open the spreadsheet's <b>StudentProgress</b> tab. A new row should appear. Each synchronization appends a new snapshot row, so repeated submissions create a history of progress rather than overwriting earlier records.</li>
+                            <li>To synchronize future edits automatically on a device, tick <b>Enable automatic Google Sheets synchronization</b> on that device. The module waits briefly after changes before sending a complete snapshot. Keep the browser page open and connected to the internet while synchronization occurs. The endpoint itself is built into the HTML and is the same on every device.</li>
+                            <li>For the centralized monitoring dashboard, open <b>Apps Script → Project Settings → Script Properties</b>. Add a property named <b>ADMIN_DASHBOARD_TOKEN</b> and set a long, private random value. Do not put this token in the HTML source or share it with students.</li>
+                            <li>The complete Code.gs source displayed below already includes the doGet teacher-dashboard endpoint. If the deployed server-side project does not yet contain this version, update Code.gs and deploy a new version of the same Web App. The teacher enters the private token in the Centralized Teacher Monitoring Dashboard. The script returns the latest record per student name and grade/section, plus the number of saved snapshots. Keep the spreadsheet and deployment access restricted according to school policy.</li>
+                            <li>When you edit the Apps Script after deployment, open <b>Deploy → Manage deployments</b>, edit the existing deployment, select a new version, and deploy again. Editing the existing deployment normally preserves its /exec URL. If you create a different deployment with a new URL, update the <b>GOOGLE_SHEETS_WEB_APP_URL</b> constant in this HTML file to that new /exec URL.</li>
+                        </ol>
+                        <p class="font-semibold">Spreadsheet columns include: synchronization time, student identity, completion percentage, completed sections, latest quiz score, quiz-attempt history, blueprint/reflection JSON, and the full dataset JSON for later review or processing.</p>
+                    </div>
+                    <!-- COMPLETE GOOGLE APPS SCRIPT CODE: displayed here for convenient teacher/developer access. -->
+                    <div class="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-950 p-3 space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <h4 class="font-extrabold text-slate-800 dark:text-slate-100">Complete Google Apps Script Code (Code.gs)</h4>
+                            <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Copy the complete code below into Apps Script</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">This is the complete server-side script used by this module. It includes the doPost synchronization endpoint and the token-protected doGet teacher dashboard endpoint. Keep the spreadsheet and administrator token private, and deploy the script as a Web App after saving.</p>
+                        <textarea id="googleSheetsAppsScriptCode" readonly spellcheck="false" aria-label="Complete Google Apps Script Code.gs source code" class="w-full min-h-[34rem] max-h-[70vh] overflow-auto rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-950 text-emerald-200 p-4 font-mono text-[11px] leading-relaxed whitespace-pre" style="tab-size: 2;" onclick="this.select()">function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error('The request did not contain a dataset.');
+    }
+
+    var payload = JSON.parse(e.postData.contents);
+    if (!payload.student || !payload.student.name || !payload.student.section) {
+      throw new Error('Student name and grade/section are required.');
+    }
+
+    // If this script is bound to the destination spreadsheet, getActiveSpreadsheet() is sufficient.
+    // For a standalone Apps Script project, replace this with SpreadsheetApp.openById('YOUR_SHEET_ID').
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('StudentProgress') || ss.insertSheet('StudentProgress');
+    var headers = [
+      'Synced At', 'Student Name', 'Grade &amp; Section', 'Email', 'Teacher',
+      'Completion %', 'Completed Sections', 'Latest Quiz Score',
+      'Quiz Attempts (JSON)', 'Blueprint (JSON)', 'Founder Reflection (JSON)',
+      'Activities (JSON)', 'Certificate (JSON)', 'Complete Dataset (JSON)', 'Activity Log (JSON)'
+    ];
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(headers);
+      sheet.setFrozenRows(1);
+    } else {
+      // Add any newly introduced columns at the end without deleting existing records.
+      var existingHeaders = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+      headers.forEach(function(header) {
+        if (existingHeaders.indexOf(header) === -1) {
+          sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+          existingHeaders.push(header);
+        }
+      });
+    }
+
+    var dataset = payload.completeDataset || {};
+    var fields = dataset.fields || {};
+    var activities = payload.activities || dataset.activities || {};
+    var completed = payload.completedSections || Object.keys(activities).filter(function(key) {
+      return activities[key];
+    });
+    var blueprint = {
+      name: fields.asgnName || '',
+      businessName: fields.asgnBusiness || '',
+      valueProposition: fields.asgnValue || '',
+      price: fields.asgnPrice || '',
+      cost: fields.asgnCost || '',
+      firstCustomerAction: fields.asgnAction || '',
+      makaTaoCommitment: fields.asgnMakatao || ''
+    };
+    var founderReflection = {
+      word: fields.founderWord || '',
+      statement: fields.founderStatement || ''
+    };
+    var latestQuiz = payload.latestQuiz || dataset.latestQuiz || null;
+    var row = [
+      payload.syncedAt || new Date().toISOString(),
+      payload.student.name || '',
+      payload.student.section || '',
+      payload.student.email || '',
+      payload.student.teacher || '',
+      Number(payload.completionPercent || 0),
+      completed.join(', '),
+      latestQuiz ? String(latestQuiz.score) + '/' + String(latestQuiz.total || 15) : '',
+      JSON.stringify(payload.quizAttempts || dataset.quizAttempts || []),
+      JSON.stringify(blueprint),
+      JSON.stringify(founderReflection),
+      JSON.stringify(activities),
+      JSON.stringify(payload.certificate || dataset.certificate || null),
+      JSON.stringify(dataset),
+      JSON.stringify(payload.activityLog || dataset.activityLog || [])
+    ];
+
+    // Prefix values beginning with formula characters to prevent spreadsheet formula injection.
+    row = row.map(function(value) {
+      if (typeof value === 'string' &amp;&amp; /^[=+@\-]/.test(value)) return "'" + value;
+      return value;
+    });
+    sheet.appendRow(row);
+    return ContentService.createTextOutput(JSON.stringify({ success: true, message: 'Dataset appended.' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+// Teacher dashboard read endpoint. Set ADMIN_DASHBOARD_TOKEN in Apps Script &gt; Project Settings &gt; Script Properties.
+// This function returns only the latest snapshot per student identity plus the total number of submitted snapshots.
+function doGet(e) {
+  var params = (e &amp;&amp; e.parameter) ? e.parameter : {};
+  var callback = String(params.callback || '');
+  var respond = function(data) {
+    var json = JSON.stringify(data);
+    if (callback &amp;&amp; /^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
+      return ContentService.createTextOutput(callback + '(' + json + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  };
+  var configuredToken = PropertiesService.getScriptProperties().getProperty('ADMIN_DASHBOARD_TOKEN');
+  if (!configuredToken || String(params.token || '') !== configuredToken) {
+    return respond({ success: false, message: 'Unauthorized dashboard request. Check the administrator token configured in Apps Script.' });
+  }
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('StudentProgress');
+  if (!sheet || sheet.getLastRow() &lt; 2) return respond({ success: true, profiles: [], totalSubmissions: 0 });
+  var values = sheet.getDataRange().getValues();
+  var headers = values[0].map(function(value) { return String(value); });
+  var index = function(name) { return headers.indexOf(name); };
+  var latest = {};
+  var total = values.length - 1;
+  for (var r = 1; r &lt; values.length; r++) {
+    var row = values[r];
+    var name = String(row[index('Student Name')] || '');
+    var section = String(row[index('Grade &amp; Section')] || '');
+    var key = (name.trim().toLowerCase() + '|' + section.trim().toLowerCase());
+    if (!name || !section) continue;
+    var current = latest[key] || { submissions: 0 };
+    current.submissions++;
+    current.name = name;
+    current.section = section;
+    current.email = String(row[index('Email')] || '');
+    current.teacher = String(row[index('Teacher')] || '');
+    current.completionPercent = Number(row[index('Completion %')] || 0);
+    current.completedSections = String(row[index('Completed Sections')] || '');
+    current.syncedAt = String(row[index('Synced At')] || '');
+    var quizRaw = row[index('Quiz Attempts (JSON)')];
+    var datasetRaw = row[index('Complete Dataset (JSON)')];
+    var activityRaw = row[index('Activity Log (JSON)')];
+    var blueprintRaw = row[index('Blueprint (JSON)')];
+    try { var attempts = JSON.parse(String(quizRaw || '[]')); current.latestQuiz = attempts.length ? attempts[attempts.length - 1] : null; } catch (err) { current.latestQuiz = null; }
+    try { var blueprint = JSON.parse(String(blueprintRaw || '{}')); current.blueprint = blueprint; } catch (err) { current.blueprint = {}; }
+    try { current.activityLog = JSON.parse(String(activityRaw || '[]')); } catch (err) { current.activityLog = []; }
+    try { current.dataset = JSON.parse(String(datasetRaw || '{}')); } catch (err) { current.dataset = {}; }
+    latest[key] = current;
+  }
+  return respond({ success: true, profiles: Object.keys(latest).map(function(key) { return latest[key]; }), totalSubmissions: total, generatedAt: new Date().toISOString() });
+}</textarea>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Tip: click inside the code area, press Ctrl+A (Windows/Linux) or Command+A (Mac), then copy. The original reference copy of this script is also retained in the HTML source comment at the end of this file.</p>
+                    </div>
+                    <p class="font-semibold text-amber-700 dark:text-amber-300">Privacy and reliability: use only school-approved accounts and access settings. Collect only information required for instruction. Student uploads use a no-cors request, so the browser cannot read a server success response; a “request sent” message is not proof that a row was written. The teacher dashboard uses a separate token-protected Apps Script read endpoint. Always verify the new row in Google Sheets. Device storage is not a secure student account system. Automatic sync requires a valid URL, student name, grade/section, internet access, and an open page.</p>
+                    <p id="sheetsSyncStatus" role="status" aria-live="polite">No Google Sheets synchronization has been attempted.</p>
+                    <div class="mt-4 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-slate-900 p-3 space-y-2">
+                        <h4 class="font-extrabold text-indigo-900 dark:text-indigo-200">GCash Donation Developer Guide</h4>
+                        <p class="text-xs text-slate-700 dark:text-slate-300">Open the separate setup guide below to configure the GCash donation records spreadsheet and its Apps Script Web App.</p>
+                        <button type="button" id="openGcashDonationDeveloperGuideButton" onclick="openGcashDonationDeveloperGuide()" class="cursor-pointer font-extrabold text-indigo-700 dark:text-indigo-300 inline-flex items-center gap-2 rounded-lg border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-slate-800 px-4 py-2 hover:bg-indigo-100 dark:hover:bg-slate-700" aria-controls="gcashDonationDeveloperGuideDetails" aria-expanded="false">
+                            <i class="fa-solid fa-book-open" aria-hidden="true"></i> Open GCash Developer Guide
+                        </button>
+                                        <details id="gcashDonationDeveloperGuideDetails" class="mt-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700">
+                            <summary class="cursor-pointer font-extrabold text-indigo-700 dark:text-indigo-300">Developer Guide: Connect Donation Records to a Separate Google Sheet</summary>
+                            <div class="mt-4 space-y-4 text-sm leading-relaxed">
+                                <p class="font-semibold">Important: Use a separate spreadsheet and a separate Apps Script Web App deployment for donations. This keeps donor records independent from student learning-progress records.</p>
+                                <ol class="list-decimal space-y-2 pl-5">
+                                    <li>Sign in to the Google account that will own the donation records. Create a new Google Spreadsheet, for example <b>Educational Website – GCash Donation Records</b>. Keep its sharing permissions restricted to authorized administrators.</li>
+                                    <li>In the new spreadsheet, choose <b>Extensions → Apps Script</b>. This opens a new Apps Script project bound to the donation spreadsheet.</li>
+                                    <li>Delete the sample code in <b>Code.gs</b>, copy the complete donation Apps Script code from the code box below, and paste it into Code.gs. Save the project.</li>
+                                    <li>Return to the spreadsheet and confirm that the worksheet tab is named exactly <b>Donor Records</b>. The script will create this tab and its column headings automatically if it does not exist.</li>
+                                    <li>In Apps Script, select <b>Deploy → New deployment</b>. Select the gear icon and choose <b>Web app</b>. Set <b>Execute as</b> to your account. Choose the access setting permitted by your Google account and school/data-protection policy. The web app must accept the website's anonymous POST request for this simple public form to work; understand that anyone who obtains the endpoint may submit records.</li>
+                                    <li>Click <b>Deploy</b>, authorize the script when prompted, and copy the Web App URL ending in <b>/exec</b>. Do not use the test /dev URL.</li>
+                                    <li>In the HTML source, find <code>GCASH_DONATION_WEB_APP_URL</code> in the GCash Donation Feature script near the bottom. Replace only <code>PASTE_DONATION_WEB_APP_URL_HERE</code> with your new /exec URL. Keep the URL inside the quotation marks. Do not replace the existing student-progress endpoint.</li>
+                                    <li>Save and publish the updated HTML page. Open the donation modal, send a small test donation only if appropriate, enter a test donor name and amount, tick the confirmation box, and submit. Check the <b>Donor Records</b> worksheet for the new row.</li>
+                                    <li>When the Apps Script code changes, choose <b>Deploy → Manage deployments</b>, edit the donation Web App deployment, select <b>New version</b>, and deploy. If you create a new deployment instead, replace the URL in the HTML again.</li>
+                                    <li>Keep a manual review process. The browser sends the form in <code>no-cors</code> mode, so it cannot read the Apps Script response. The page can report that the request was sent, but it cannot truthfully confirm that Google Sheets saved the row. Verify the row in the spreadsheet.</li>
+                                </ol>
+                                <div class="rounded-lg bg-slate-950 p-3 text-xs text-emerald-200">Data columns: Timestamp, Donor Name, Donor Type, Organization / Group, Country, Amount, and Source. The script validates required donor fields, uses a script lock to reduce simultaneous-write collisions, and appends each donation record as a new row. This website submits individual donor records; the Country field is collected in the form.</div>
+                                <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="font-extrabold">Complete Google Apps Script Code (Donor Records)</h3><button type="button" onclick="copyGcashDonationScript()" class="rounded-lg bg-indigo-600 px-3 py-2 text-xs font-bold text-white hover:bg-indigo-700">Copy Code.gs</button></div>
+                                <textarea id="gcashDonationAppsScriptCode" class="gcash-code rounded-lg border border-slate-300 bg-slate-950 p-3 text-emerald-200" readonly spellcheck="false" aria-label="Complete donation Google Apps Script source code" onclick="this.select()">/**
+ * ExamShuffle Pro - Donor Information Google Sheets Integration
+ *
+ * SETUP
+ * 1. Create or open the Google spreadsheet where donor records should be stored.
+ * 2. In the spreadsheet, open Extensions > Apps Script.
+ * 3. Replace the editor contents with this entire file.
+ * 4. Set SPREADSHEET_ID below to the ID between /d/ and /edit in the spreadsheet URL.
+ * 5. Save the project, then choose Deploy > Manage deployments.
+ * 6. Edit the existing Web app deployment and select New version, or create a new Web app deployment.
+ * 7. Set Execute as to Me and Who has access to Anyone (or the broadest access allowed by your school/account policy).
+ * 8. Deploy and authorize when prompted. If you create a new deployment, copy its URL ending in /exec into the HTML file.
+ * 9. Test the /exec URL in a browser. The GET health check should return a JSON message that the endpoint is running.
+ *
+ * PRIVACY NOTE: Anyone with access to the deployed endpoint may be able to submit rows.
+ * Do not collect sensitive personal information. Review access settings and spreadsheet permissions.
+ *
+ * FIXES IN THIS VERSION
+ * - Saves all seven columns in the same order as HEADERS.
+ * - Saves the submitted Amount in the Amount column.
+ * - Saves the Source in the Source column.
+ * - Keeps URL-encoded form submission compatibility with the HTML page (e.parameter).
+ * - Returns useful JSON messages for manual testing and Apps Script execution logs.
+ */
+
+const SPREADSHEET_ID = '1iXfkwDMLDbVty8ph7nyIJ3CTinTWKDhH67XDLoe0Few';
+const SHEET_NAME = 'Donor Records';
+const HEADERS = ['Timestamp', 'Donor Name', 'Donor Type', 'Organization / Group', 'Country', 'Amount', 'Source'];
+
+/** Handles URL-encoded POST submissions from the ExamShuffle Pro HTML page. */
+function doPost(e) {
+  let lock;
+  try {
+    if (!SPREADSHEET_ID || SPREADSHEET_ID === 'PASTE_YOUR_GOOGLE_SPREADSHEET_ID_HERE') {
+      throw new Error('Configure SPREADSHEET_ID in the Apps Script first.');
+    }
+
+    // The HTML page sends URLSearchParams, which Apps Script exposes through e.parameter.
+    const params = (e && e.parameter) ? e.parameter : {};
+    const donorName = clean_(params.donorName || params.name, 160);
+    const donorType = clean_(params.donorType, 20);
+    const organization = clean_(params.donorOrganization || params.organization, 200);
+    const country = clean_(params.country, 100);
+    const amount = clean_(params.amount, 60);
+    const source = clean_(params.source || 'ExamShuffle Pro Support My Work', 120);
+
+    if (!donorName || !country || !['Individual', 'Group'].includes(donorType)) {
+      return jsonResponse_({
+        success: false,
+        message: 'Required donor fields are missing or invalid. Donor Name, Country, and a valid Donor Type are required.'
+      });
+    }
+
+    if (donorType === 'Group' && !organization) {
+      return jsonResponse_({
+        success: false,
+        message: 'Organization / Group name is required for group donors.'
+      });
+    }
+
+    // Obtain a script lock to prevent two submissions from writing at the same time.
+    lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+
+    // Create the destination tab if it does not exist.
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+    }
+
+    // Add headers to a completely empty sheet.
+    if (sheet.getLastRow() === 0) {
+      sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+      sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+      sheet.setFrozenRows(1);
+    }
+
+    // Append all seven values in exactly the same order as the HEADERS array.
+    // Prefix user-entered values that begin with formula characters to reduce formula-injection risk.
+    sheet.appendRow([
+      new Date(),                                      // A: Timestamp
+      safeCell_(donorName),                            // B: Donor Name
+      donorType,                                       // C: Donor Type
+      safeCell_(donorType === 'Group' ? organization : ''), // D: Organization / Group
+      safeCell_(country),                              // E: Country
+      safeCell_(amount),                               // F: Amount
+      safeCell_(source)                                // G: Source
+    ]);
+
+    SpreadsheetApp.flush();
+
+    return jsonResponse_({
+      success: true,
+      message: 'Donor record saved.',
+      sheet: SHEET_NAME,
+      row: sheet.getLastRow()
+    });
+  } catch (error) {
+    console.error('ExamShuffle Pro donor submission failed:', error && error.stack ? error.stack : error);
+    return jsonResponse_({
+      success: false,
+      message: String(error && error.message ? error.message : 'Unable to save donor record.')
+    });
+  } finally {
+    if (lock) {
+      try {
+        lock.releaseLock();
+      } catch (releaseError) {
+        console.warn('Could not release Apps Script lock:', releaseError);
+      }
+    }
+  }
+}
+
+/** Optional GET handler provides a simple deployment health check. */
+function doGet() {
+  try {
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    return jsonResponse_({
+      success: true,
+      message: 'ExamShuffle Pro donor endpoint is running.',
+      spreadsheet: spreadsheet.getName(),
+      sheet: SHEET_NAME,
+      sheetExists: Boolean(sheet),
+      lastRow: sheet ? sheet.getLastRow() : 0
+    });
+  } catch (error) {
+    console.error('ExamShuffle Pro health check failed:', error && error.stack ? error.stack : error);
+    return jsonResponse_({
+      success: false,
+      message: String(error && error.message ? error.message : 'Health check failed.')
+    });
+  }
+}
+
+/** Limits lengths and strips control characters from submitted fields. */
+function clean_(value, maxLength) {
+  return String(value == null ? '' : value)
+    .replace(/[\u0000-\u001F\u007F]/g, '')
+    .trim()
+    .slice(0, maxLength);
+}
+
+/** Prevents values beginning with spreadsheet formula markers from being interpreted as formulas. */
+function safeCell_(value) {
+  const text = String(value == null ? '' : value);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
+/** Returns JSON output for manual endpoint tests; browser no-cors requests cannot read this response. */
+function jsonResponse_(object) {
+  return ContentService.createTextOutput(JSON.stringify(object))
+    .setMimeType(ContentService.MimeType.JSON);
+}</textarea>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Security and privacy: this is a public form endpoint, not payment processing or proof of payment. Do not store GCash MPINs, OTPs, passwords, or full payment credentials. Restrict spreadsheet access, periodically review submissions, and add stronger server-side abuse controls if the form receives spam.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </details>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 no-print">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 Grade 12 Senior High School Entrepreneurship Program • Interactive Learning Module</p>
+        </div>
+    </footer>
+
+    <!-- GCash DONATION FEATURE: independent donation record endpoint and spreadsheet; does not modify student progress synchronization. -->
+    <button id="gcashDonationLauncher" type="button" onclick="openGcashDonationModal()" class="no-print fixed bottom-3 right-3 z-[90] inline-flex max-w-[calc(100vw-1.5rem)] items-center gap-1.5 rounded-full bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 text-xs font-bold shadow-lg transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-400" aria-haspopup="dialog" aria-controls="gcashDonationModal">
+        <i class="fa-solid fa-heart" aria-hidden="true"></i><span>Support This Website</span>
+    </button>
+
+    <div id="gcashDonationModal" class="no-print" hidden role="dialog" aria-modal="true" aria-labelledby="gcashDonationTitle" aria-describedby="gcashDonationIntro">
+        <div class="gcash-dialog">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 rounded-t-2xl bg-blue-700 px-5 py-4 text-white">
+                <div class="flex items-center gap-3"><div class="grid h-11 w-11 place-items-center rounded-xl bg-white/15"><i class="fa-solid fa-heart text-xl" aria-hidden="true"></i></div><div><h2 id="gcashDonationTitle" class="text-xl font-extrabold">Support This Educational Website</h2><p class="text-xs text-blue-100">Help maintain and improve free learning resources</p></div></div>
+                <button type="button" onclick="closeGcashDonationModal()" class="rounded-lg p-2 hover:bg-white/15" aria-label="Close donation window"><i class="fa-solid fa-xmark text-xl" aria-hidden="true"></i></button>
+            </div>
+            <div class="space-y-5 p-5 sm:p-7">
+                <p id="gcashDonationIntro" class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">Your voluntary contribution helps support the development, maintenance, hosting, and continuous improvement of this educational website. Thank you for supporting accessible learning materials.</p>
+                <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/50">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div><p class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">GCash mobile number</p><p id="gcashDonationNumber" class="mt-1 text-2xl font-black tracking-wide text-blue-900 dark:text-blue-100">0968-7042-059</p><p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Please verify the recipient details in your GCash app before sending.</p></div>
+                        <button type="button" onclick="copyGcashDonationNumber()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 text-sm font-bold text-white hover:bg-blue-800"><i class="fa-regular fa-copy" aria-hidden="true"></i> Copy GCash Number</button>
+                    </div>
+                    <p id="gcashCopyStatus" class="mt-2 text-xs" aria-live="polite"></p>
+                </div>
+                <div class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200"><i class="fa-solid fa-circle-info mr-1" aria-hidden="true"></i> Send your contribution using your GCash app first. Then submit the form below to record the donation. Submitting this form does not transfer money or independently verify a GCash payment.</div>
+                <form id="gcashDonationForm" class="space-y-4" onsubmit="submitGcashDonation(event)" novalidate>
+                    <div><label for="gcashDonorName" class="mb-1 block text-sm font-bold">Donor's Name <span class="text-red-600">*</span></label><input id="gcashDonorName" name="donorName" type="text" maxlength="100" autocomplete="name" required placeholder="Enter your name" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">You may enter your preferred display name.</p></div>
+                    <div><label for="gcashDonorCountry" class="mb-1 block text-sm font-bold">Country <span class="text-red-600">*</span></label><input id="gcashDonorCountry" name="country" type="text" maxlength="100" autocomplete="country-name" required placeholder="Enter your country" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"></div>
+                    <div><label for="gcashDonationAmount" class="mb-1 block text-sm font-bold">Donation Amount (PHP) <span class="text-red-600">*</span></label><div class="flex overflow-hidden rounded-xl border border-slate-300 dark:border-slate-600"><span class="grid place-items-center bg-slate-100 px-4 font-extrabold dark:bg-slate-700">₱</span><input id="gcashDonationAmount" name="amount" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" required placeholder="Enter any amount" class="min-w-0 flex-1 bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-white"></div><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Enter any amount from ₱1.00 up to ₱1,000,000.00.</p></div>
+                    <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-3 text-sm dark:border-slate-700"><input id="gcashPaymentConfirmed" type="checkbox" required class="mt-1 h-4 w-4 accent-blue-700"><span>I confirm that I have already sent this donation through GCash to the number shown above. I understand that this form only records my submitted information.</span></label>
+                    <button id="gcashDonationSubmit" type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 font-extrabold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Submit Donation Record</button>
+                    <p id="gcashDonationStatus" class="gcash-status text-sm" role="status" aria-live="polite"></p>
+                </form>
+                <p class="text-center text-xs text-slate-500 dark:text-slate-400">Thank you for helping keep educational resources available to learners.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXTERNAL APPLICATION JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+
+<!--
+GOOGLE APPS SCRIPT SERVER CODE (paste into Extensions > Apps Script in the linked Google Sheet):
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error('The request did not contain a dataset.');
+    }
+
+    var payload = JSON.parse(e.postData.contents);
+    if (!payload.student || !payload.student.name || !payload.student.section) {
+      throw new Error('Student name and grade/section are required.');
+    }
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('StudentProgress') || ss.insertSheet('StudentProgress');
+    var headers = [
+      'Synced At', 'Student Name', 'Grade & Section', 'Email', 'Teacher',
+      'Completion %', 'Completed Sections', 'Latest Quiz Score',
+      'Quiz Attempts (JSON)', 'Blueprint (JSON)', 'Founder Reflection (JSON)',
+      'Activities (JSON)', 'Certificate (JSON)', 'Complete Dataset (JSON)', 'Activity Log (JSON)'
+    ];
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(headers);
+      sheet.setFrozenRows(1);
+    } else {
+      var existingHeaders = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+      headers.forEach(function(header) {
+        if (existingHeaders.indexOf(header) === -1) {
+          sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+          existingHeaders.push(header);
+        }
+      });
+    }
+
+    var dataset = payload.completeDataset || {};
+    var fields = dataset.fields || {};
+    var activities = payload.activities || dataset.activities || {};
+    var completed = payload.completedSections || Object.keys(activities).filter(function(key) {
+      return activities[key];
+    });
+    var blueprint = {
+      name: fields.asgnName || '',
+      businessName: fields.asgnBusiness || '',
+      valueProposition: fields.asgnValue || '',
+      price: fields.asgnPrice || '',
+      cost: fields.asgnCost || '',
+      firstCustomerAction: fields.asgnAction || '',
+      makaTaoCommitment: fields.asgnMakatao || ''
+    };
+    var founderReflection = {
+      word: fields.founderWord || '',
+      statement: fields.founderStatement || ''
+    };
+    var latestQuiz = payload.latestQuiz || dataset.latestQuiz || null;
+    var row = [
+      payload.syncedAt || new Date().toISOString(),
+      payload.student.name || '',
+      payload.student.section || '',
+      payload.student.email || '',
+      payload.student.teacher || '',
+      Number(payload.completionPercent || 0),
+      completed.join(', '),
+      latestQuiz ? String(latestQuiz.score) + '/' + String(latestQuiz.total || 15) : '',
+      JSON.stringify(payload.quizAttempts || dataset.quizAttempts || []),
+      JSON.stringify(blueprint),
+      JSON.stringify(founderReflection),
+      JSON.stringify(activities),
+      JSON.stringify(payload.certificate || dataset.certificate || null),
+      JSON.stringify(dataset),
+      JSON.stringify(payload.activityLog || dataset.activityLog || [])
+    ];
+
+    row = row.map(function(value) {
+      if (typeof value === 'string' && /^[=+@\-]/.test(value)) return "'" + value;
+      return value;
+    });
+    sheet.appendRow(row);
+    return ContentService.createTextOutput(JSON.stringify({ success: true, message: 'Dataset appended.' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function doGet(e) {
+  var params = (e && e.parameter) ? e.parameter : {};
+  var callback = String(params.callback || '');
+  var respond = function(data) {
+    var json = JSON.stringify(data);
+    if (callback && /^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
+      return ContentService.createTextOutput(callback + '(' + json + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  };
+  var configuredToken = PropertiesService.getScriptProperties().getProperty('ADMIN_DASHBOARD_TOKEN');
+  if (!configuredToken || String(params.token || '') !== configuredToken) {
+    return respond({ success: false, message: 'Unauthorized dashboard request. Check the administrator token configured in Apps Script.' });
+  }
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('StudentProgress');
+  if (!sheet || sheet.getLastRow() < 2) return respond({ success: true, profiles: [], totalSubmissions: 0 });
+  var values = sheet.getDataRange().getValues();
+  var headers = values[0].map(function(value) { return String(value); });
+  var index = function(name) { return headers.indexOf(name); };
+  var latest = {};
+  var total = values.length - 1;
+  for (var r = 1; r < values.length; r++) {
+    var row = values[r];
+    var name = String(row[index('Student Name')] || '');
+    var section = String(row[index('Grade & Section')] || '');
+    var key = (name.trim().toLowerCase() + '|' + section.trim().toLowerCase());
+    if (!name || !section) continue;
+    var current = latest[key] || { submissions: 0 };
+    current.submissions++;
+    current.name = name;
+    current.section = section;
+    current.email = String(row[index('Email')] || '');
+    current.teacher = String(row[index('Teacher')] || '');
+    current.completionPercent = Number(row[index('Completion %')] || 0);
+    current.completedSections = String(row[index('Completed Sections')] || '');
+    current.syncedAt = String(row[index('Synced At')] || '');
+    var quizRaw = row[index('Quiz Attempts (JSON)')];
+    var datasetRaw = row[index('Complete Dataset (JSON)')];
+    var activityRaw = row[index('Activity Log (JSON)')];
+    var blueprintRaw = row[index('Blueprint (JSON)')];
+    try { var attempts = JSON.parse(String(quizRaw || '[]')); current.latestQuiz = attempts.length ? attempts[attempts.length - 1] : null; } catch (err) { current.latestQuiz = null; }
+    try { var blueprint = JSON.parse(String(blueprintRaw || '{}')); current.blueprint = blueprint; } catch (err) { current.blueprint = {}; }
+    try { current.activityLog = JSON.parse(String(activityRaw || '[]')); } catch (err) { current.activityLog = []; }
+    try { current.dataset = JSON.parse(String(datasetRaw || '{}')); } catch (err) { current.dataset = {}; }
+    latest[key] = current;
+  }
+  return respond({ success: true, profiles: Object.keys(latest).map(function(key) { return latest[key]; }), totalSubmissions: total, generatedAt: new Date().toISOString() });
+}
+-->
+</html>

@@ -1,0 +1,88 @@
+/* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        /* Classroom accessibility controls: scalable typography, visible keyboard focus, and reduced motion. */
+        html { scroll-behavior: smooth; }
+        body { font-size: 100%; }
+        :focus-visible { outline: 3px solid #f59e0b !important; outline-offset: 3px !important; }
+        .classroom-large-text { line-height: 1.65 !important; }
+        .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 1000; padding: 12px 16px; background: #111827; color: #fff; border-radius: 8px; }
+        .skip-link:focus { left: 12px; }
+        @media print {
+            body.print-answer-sheet > * { display: none !important; }
+            body.print-answer-sheet main { display: block !important; }
+            body.print-answer-sheet main > * { display: none !important; }
+            body.print-answer-sheet #answerSheetAccess { display: block !important; border: 0 !important; box-shadow: none !important; }
+            body.print-answer-sheet #answerSheetAccess > *:not(#answerSheetContent) { display: none !important; }
+            body.print-answer-sheet #answerSheetContent { display: block !important; color: #111827 !important; background: #ffffff !important; }
+            body.print-answer-sheet #answerSheetContent article { break-inside: avoid; border: 1px solid #cbd5e1 !important; color: #111827 !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+        /* Dedicated print sheets: the blueprint and certificate print independently. */
+        #blueprintPrintSheet, #certificatePrintSheet { display: none; }
+        @page { size: A4 portrait; margin: 14mm; }
+        @media print {
+            html, body { background: #ffffff !important; color: #111827 !important; }
+            body { display: block !important; min-height: 0 !important; }
+            body.print-blueprint > *:not(#blueprintPrintSheet),
+            body.print-certificate > *:not(#certificatePrintSheet) { display: none !important; }
+            body.print-blueprint #blueprintPrintSheet,
+            body.print-certificate #certificatePrintSheet { display: block !important; }
+            #blueprintPrintSheet, #certificatePrintSheet {
+                width: 100%; min-height: 0; margin: 0; padding: 0;
+                color: #111827 !important; background: #ffffff !important;
+                font-family: Arial, Helvetica, sans-serif !important;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            #blueprintPrintSheet .print-frame, #certificatePrintSheet .print-frame {
+                border: 2px solid #1e3a8a; border-radius: 8px; padding: 16mm 13mm;
+            }
+            #blueprintPrintSheet h1, #certificatePrintSheet h1 { color: #1e3a8a !important; }
+            #blueprintPrintSheet h2, #certificatePrintSheet h2 { color: #111827 !important; }
+            #blueprintPrintSheet .print-value { white-space: pre-wrap; overflow-wrap: anywhere; }
+            #blueprintPrintSheet .print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
+            #blueprintPrintSheet .print-cell { border: 1px solid #cbd5e1; border-radius: 6px; padding: 8mm; }
+            #certificatePrintSheet { text-align: center; }
+            #certificatePrintSheet .print-frame { border: 5px double #b45309; padding: 22mm 14mm; }
+            #certificatePrintSheet .certificate-word { display: inline-block; margin: 8mm 0; padding: 3mm 8mm; border: 1px solid #b45309; border-radius: 30px; font-weight: bold; }
+        }
+
+        /* GCash donation feature: responsive modal, accessible status feedback, and independent print-safe overlay. */
+        #gcashDonationModal[hidden] { display: none !important; }
+        #gcashDonationModal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(15, 23, 42, .78); backdrop-filter: blur(5px); }
+        #gcashDonationModal .gcash-dialog { width: min(100%, 760px); max-height: min(92vh, 900px); overflow-y: auto; border-radius: 1.25rem; background: #fff; color: #0f172a; box-shadow: 0 25px 80px rgba(0,0,0,.35); }
+        .dark #gcashDonationModal .gcash-dialog { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }
+        #gcashDonationModal input { color: #0f172a; }
+        #gcashDonationModal .gcash-status { min-height: 1.5rem; }
+        #gcashDonationModal .gcash-code { width: 100%; min-height: 330px; white-space: pre; overflow: auto; font: 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+        @media (max-width: 640px) { #gcashDonationModal { padding: .45rem; align-items: flex-end; } #gcashDonationModal .gcash-dialog { max-height: 96vh; border-radius: 1rem 1rem .5rem .5rem; } }
+        @media print { #gcashDonationLauncher, #gcashDonationModal { display: none !important; } }
